@@ -23,10 +23,10 @@ var download = function (url, dest, cb) {
     });
 };
 
-fs.readFile('moviesDetails.json', 'utf8', function (err, data) {
-  const moviesDetails = JSON.parse(data);
+fs.readFile('./data/moviesDetail.json', 'utf8', function (err, data) {
+  const moviesDetail = JSON.parse(data);
 
-  moviesDetails.forEach((movieDetails) => {
+  moviesDetail.forEach((movieDetails) => {
     movieDetails.Casting.Items.forEach((item) => {
       if (item.StaffImage.startsWith('http')) {
         const url = item.StaffImage;
@@ -43,5 +43,14 @@ fs.readFile('moviesDetails.json', 'utf8', function (err, data) {
         download(url, path);
       }
     });
+    if (
+      movieDetails.Movie.PosterURL &&
+      movieDetails.Movie.PosterURL.startsWith('http')
+    ) {
+      const url = movieDetails.Movie.PosterURL;
+      const detailPath = url.split('/MovieImg/')[1];
+      const path = `./img/MovieImg/${detailPath}`;
+      download(url, path);
+    }
   });
 });
